@@ -1,6 +1,9 @@
 # SimpleAuthApp
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.6.
+username and password to login are hard coded in (/src/assets/dataBase.json).
+username: admin
+password: pass
 
 ## Development server
 
