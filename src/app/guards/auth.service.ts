@@ -8,11 +8,11 @@ import { Router } from '@angular/router';
 })
 export class AuthService {
   private dataBase = 'assets/dataBase.json';
-  private validUser;
+  private validUsers;
 
   constructor(private http: HttpClient, private router: Router) {
     this.getJSON().subscribe(data => {
-      this.validUser = data;
+      this.validUsers = data.value;
     });
   }
 
@@ -33,13 +33,14 @@ export class AuthService {
 
   login(username: string, password: string) {
     return new Promise<any>((resolve, reject) => {
-      if (username ===  this.validUser.username && password ===  this.validUser.password) {
-        localStorage.setItem('currentUser', JSON.stringify(username));
-        this.router.navigateByUrl('dashboard');
-        resolve(username);
-      } else {
-        reject('Invalid credentials');
+      for (const user of this.validUsers) {
+        if (username ===  user.username && password ===  user.password) {
+          localStorage.setItem('currentUser', JSON.stringify(username));
+          this.router.navigateByUrl('dashboard');
+          return resolve(username);
+        }
       }
+      return reject('Invalid credentials');
     });
   }
 
