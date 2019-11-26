@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpParams, HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 
@@ -7,18 +8,8 @@ import { Router } from '@angular/router';
   providedIn: 'root'
 })
 export class AuthService {
-  private dataBase = 'assets/dataBase.json';
-  private validUsers;
 
-  constructor(private http: HttpClient, private router: Router) {
-    this.getJSON().subscribe(data => {
-      this.validUsers = data.value;
-    });
-  }
-
-  public getJSON(): Observable<any> {
-    return this.http.get(this.dataBase);
-  }
+  constructor(private http: HttpClient, private router: Router) { }
 
   public getCurrentUser(): Promise<any> {
     return new Promise<any>((resolve, reject) => {
@@ -32,15 +23,22 @@ export class AuthService {
   }
 
   login(username: string, password: string) {
+    const ParseHeaders = { headers: new HttpHeaders({
+      'Content-Type': 'application/x-www-form-urlencoded'
+     })};
+    const data = 'username=' + username + '&password=' + password;
+
     return new Promise<any>((resolve, reject) => {
-      for (const user of this.validUsers) {
-        if (username ===  user.username && password ===  user.password) {
+      this.http.post('/api/v1/login', data, ParseHeaders).subscribe((res) => {
+        if (res) {
           localStorage.setItem('currentUser', JSON.stringify(username));
           this.router.navigateByUrl('dashboard');
-          return resolve(username);
+          return resolve(res);
+        } else {
+          return reject('Invalid credentials');
         }
-      }
-      return reject('Invalid credentials');
+      });
+
     });
   }
 
