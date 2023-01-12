@@ -7,9 +7,9 @@
   },
   "dependencies": {
     "@castleio/sdk": "^0.4.7",
-    "body-parser": "~1.13.2",
+    "body-parser": "~1.20.1",
     "cookie-parser": "~1.3.5",
-    "express": "~4.13.1",
+    "express": "~4.18.2",
     "uid-safe": "^2.1.5"
   }
 }
